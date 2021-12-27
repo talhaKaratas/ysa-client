@@ -1,0 +1,149 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.homeContainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body {
+  background-color: #2d364c;
+  color: white;
+}
+
+.homeBox {
+  flex: 0.5;
+  height: 30vh;
+  border: 3px dashed white;
+  margin: 0 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  cursor: pointer;
+  transition: background 0.4s ease;
+  box-shadow: 8px 17px 13px 0px rgba(0, 0, 0, 0.4);
+}
+
+.homeBox:hover {
+  background: rgba(165, 172, 175, 0.1);
+}
+
+.tableWrapper {
+  height: 400px;
+  overflow-y: scroll;
+  width: 80%;
+  margin: 10px auto;
+  border: 2px dashed white;
+  position: relative;
+}
+
+.tableWrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background: #888;
+}
+
+.dataTable {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+  /* table-layout: fixed; */
+}
+
+.dataTable td {
+  border: 1px solid white !important;
+  border-collapse: collapse;
+  text-align: center;
+  color: white;
+  padding: 5px 10px;
+}
+
+button {
+  cursor: pointer;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+  border: 1px dashed white;
+  color: white;
+}
+
+.customFileInputButton {
+  position: absolute;
+  width: 40%;
+  height: 60px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.content {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.startButton {
+  width: 150px;
+  height: 50px;
+  display: block;
+  margin: 20px auto;
+  transition: background 0.4s ease;
+  font-size: 17px;
+}
+
+.startButton:hover {
+  background: rgba(165, 172, 175, 0.1);
+}
+
+.startButton:disabled {
+  background: rgba(165, 172, 175, 0.1);
+  cursor: default;
+}
+
+.formWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+  width: 250px;
+  margin: 10px 20px;
+}
+
+.inputWrapper label {
+  margin-bottom: 5px;
+}
+
+.inputWrapper input {
+  width: 100%;
+  height: 30px;
+  font-size: 17px;
+  outline: none;
+  border-radius: 7px;
+}
