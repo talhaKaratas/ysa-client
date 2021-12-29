@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import axios from '../axios';
 import Table from '../components/Table';
 import NeuralNetwork from '../NeuralNetwork';
@@ -13,47 +13,74 @@ const Learn = () => {
   const [completedEpochCount, setCompletedEpochCount] = useState(0);
 
   const [dataset, setDataset] = useState([]);
+
   const fileInputRef = useRef();
 
-  const startLearning = async () => {
-    const data = dataset.splice(1, dataset.length - 1);
-    const label = dataset.splice(0, 1)[0];
-    let target = [];
-    for (let index = 0; index < data.length; index++) {
-      target.push(data[index].pop());
-    }
+  const [data, setData] = useState([]);
+  const [label, setLabel] = useState([]);
+  const [target, setTarget] = useState([]);
 
-    const nn = new NeuralNetwork(
-      label.length - 1,
-      hiddenLayerNodes,
-      outputNodes,
-      learningRate
+  useEffect(() => {
+    const newSet = dataset.map((arr) => arr.slice());
+    if (newSet.length) {
+      const newData = newSet.filter((item, index) => index !== 0);
+      setData(newData);
+      setLabel(newSet.filter((item, index) => index === 0)[0]);
+      setTarget(newData.map((item) => item.pop()));
+    }
+  }, [dataset]);
+
+  const [nn, setNn] = useState(() => new NeuralNetwork());
+
+  useEffect(() => {
+    setNn(
+      () =>
+        new NeuralNetwork(
+          label.length - 1,
+          Number(hiddenLayerNodes),
+          Number(outputNodes),
+          learningRate
+        )
     );
+  }, [label, learningRate, outputNodes, hiddenLayerNodes, dataset]);
 
+  if (data.length) {
     nn.normaliseData(data);
+  }
 
-    for (let j = 0; j < epochCount; j++) {
-      for (let index = 0; index < data.length; index++) {
-        nn.train(math.matrix(data[index]), math.matrix([target[index]]));
+  // console.log(nn.wih, nn.who);
+
+  useEffect(() => {
+    (async () => {
+      if (completedEpochCount !== 0 && completedEpochCount <= epochCount - 1) {
+        startLearning();
       }
-      setCompletedEpochCount(j + 1);
-    }
+      if (completedEpochCount >= epochCount) {
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<', completedEpochCount);
+        const wih = nn.wih;
+        const who = nn.who;
 
-    const wih = nn.wih;
-    const who = nn.who;
+        try {
+          const res = await axios.post('/learn', {
+            hiddenLayerNodes,
+            outputNodes,
+            learningRate,
+            wih,
+            who
+          });
+          console.log(res.data);
+        } catch (err) {
+          console.log('err');
+        }
+      }
+    })();
+  }, [completedEpochCount]);
 
-    try {
-      const res = await axios.post('/learn', {
-        hiddenLayerNodes,
-        outputNodes,
-        learningRate,
-        wih,
-        who
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log('err');
+  const startLearning = async () => {
+    for (let index = 0; index < data.length; index++) {
+      nn.train(math.matrix(data[index]), math.matrix([target[index]]));
     }
+    setCompletedEpochCount((curr) => curr + 1);
   };
 
   return (

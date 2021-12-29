@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import readXlsxFile from 'read-excel-file';
 
 const Table = ({
@@ -6,7 +6,8 @@ const Table = ({
   setDataset,
   fileInputRef,
   testTable = false,
-  testedRow
+  testedRow,
+  result
 }) => {
   const readExcel = (file) => {
     readXlsxFile(file).then((rows) => {
@@ -15,23 +16,50 @@ const Table = ({
     });
   };
 
+  const rowScroll = useRef();
+
+  const scrollIntoRow = () => {
+    if (rowScroll.current) {
+      rowScroll.current.scrollIntoView();
+    }
+  };
+
+  useEffect(() => {
+    scrollIntoRow();
+  }, [testedRow]);
+
   return (
     <>
       <div className="tableWrapper">
         <table className="dataTable">
           {dataset.map((row, index1) => (
             <tr
+              ref={index1 === testedRow && testTable ? rowScroll : null}
               key={index1}
               style={{
                 background:
                   testTable && index1 === testedRow && index1 !== 0
                     ? 'yellow'
-                    : 'transparent'
+                    : 'transparent',
+                color:
+                  testTable && index1 === testedRow && index1 !== 0
+                    ? 'blue'
+                    : ''
               }}
             >
               {row.map((cell, index2) => (
                 <td key={index2}>{cell}</td>
               ))}
+
+              {testTable && index1 === 0 && <td>Result</td>}
+              {testTable && index1 !== 0 && (
+                <td>{result.length && result[index1 - 1]}</td>
+              )}
+              {/* {testTable && row === 0 && <td>Result</td>}
+              {testTable &&
+                dataset.map((cell, index2) => (
+                  <td key={index2}>{testedRow === index2 ? '1' : ''}</td>
+                ))} */}
             </tr>
           ))}
         </table>

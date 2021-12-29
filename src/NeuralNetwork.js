@@ -83,6 +83,8 @@ class NeuralNetwork {
       })
     );
 
+    console.log(error);
+
     const dEdO = math.evaluate('(actual - targets)', { actual, targets });
 
     const dOdN = math.evaluate('actual .* (1-actual)', { actual });

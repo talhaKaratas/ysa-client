@@ -147,3 +147,8 @@ button {
   outline: none;
   border-radius: 7px;
 }
+
+#counter {
+  width: fit-content;
+  margin: 0 auto !important;
+}
